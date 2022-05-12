@@ -1,0 +1,57 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+
+<title>상하의 트위스트</title>
+<style>
+.desc {
+    float: left;
+    width: 100%;
+    color: #888;
+    font-size: 0.9em;
+}
+ .page-mnu {bottom:0;     position:absolute;}
+</style>
+</head>
+<body>
+	<div class="page-hdr">설정</div>
+		<div class="page-body">
+		<div class="section pad-24 mtop-30">
+<div class="menu" onclick="showUserInfo()">내정보</div>
+<br><br><br><br><br><br>
+<div class="menu" onclick="masterPage()">관리자 페이지</div>
+
+</div>
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function mix() {
+	window.location.href = "mix.html";
+	}
+function closet() {
+	window.location.href = "closet.html";
+	};
+function community() {
+	window.location.href = "main.html";
+	}
+function setup() {
+	window.location.href = "setup.html";
+	}
+	function showUserInfo() {
+		window.location.href = "userInfo.html";
+		}
+	function masterPage() {
+		window.location.href = "masterPage.html";
+		}
+</script>

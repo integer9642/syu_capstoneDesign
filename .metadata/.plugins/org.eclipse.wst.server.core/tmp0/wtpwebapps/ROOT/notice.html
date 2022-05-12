@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>MySNS</title>
+</head>
+<body>
+<div class="page-hdr">공지사항</div>
+<div class="page-body">
+<div class="page-mnu">
+<div class="menu" onclick="addFeed()">글쓰기</div>
+<div class="menu" onclick="showFriends()">친구보기</div>
+<div class="menu" onclick="notice()">공지사항</div>
+
+</div>
+<div id="list" class="section"></div>
+<div class="section mtop-10 mbot-30 pad-16">
+<div class="button" onclick="getNext()">공지사항 더보기 </div>
+</div>
+</div>
+<div class="page-footer">
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+	});
+
+	var minNo = -1;
+	var noticeList = [];	
+	var frIds = null;
+	function start(uid){
+		frIds = '"' + uid + '"';
+		AJAX.call("jsp/friendList.jsp", {id: uid}, function(data) {
+		var list = JSON.parse(data.trim());
+		for (var i=0; i<list.length; i++) {
+		frIds += ', "' + list[i].id + '"';
+		}
+		start2(uid);
+		});
+	}
+
+	function start2(uid) {
+		var notices = DataCache.get("mainCache");
+		if (notices != null){
+			console.log("[start] fetch the existing notice list from the cache... ");
+			noticeList = notices;
+			show(noticeList);
+		}
+		else{
+			AJAX.call("jsp/noticeGetGroup.jsp", {frids : frIds}, function(data) {
+				var notices = JSON.parse(data.trim());
+				console.log("[start] fetch a new feed list from the server ...");
+				noticeList = notices;
+				DataCache.set("mainCache", noticeList);
+				show(noticeList);
+			});
+		}
+	}
+		
+		function show(notices) {
+			if(notices.length > 0){
+				minNo = notices[notices.length -1].no;
+				}
+		var str = "";
+		for(var i=0; i<notices.length; i++){
+			str += getNoticeCode(notices[i]);
+		}
+		$("#list").append(str);
+	}
+		function getNoticeCode(notice){
+			var name = (notice.user == null) ? notice.no : notice.user.name;
+			var str = "<div class='notice' onclick='showNotice(" + notice.no + ")'>";
+			str += "<div class = 'notice.no'>" + "no." + notice.no +  "</div>";
+			str += "<div class='author'>";
+			if (notice.user == null || notice.user.images == null){
+			str += "<div class='photo'></div>";
+			}
+			else{
+				var imgurl = "images/" + notice.user.images[0];
+				str += "<div class='photo' style='background-image: url(\"" + imgurl + "\")'></div>";
+			}
+			str += "<div class='name'>" + name + "</div>";
+			str += "</div>";
+			if (notice.images != null) {
+			var imgurl = "images/" + notice.images[0];
+			str += "<div class='image' style='background-image: url(\"" + imgurl + "\")'></div>";
+		}
+			str += "<div class='text'>" + notice.content + "</div>";
+			str += "</div>";
+			str += "<div class = 'next'>" + "------------------------------------------------------" + "</div>";
+			return str;
+	}
+		function showNotice(nno){
+			for (var i=0; i<noticeList.length; i++){
+				if(noticeList[i].no == nno){
+					console.log(nno);
+					Page.go("noticeView.html", noticeList[i]);
+					return;
+				}
+			}
+		}
+		
+		function getNext() {
+			var params = {frids: frIds, maxNo: minNo};
+			AJAX.call("jsp/noticeGetGroup.jsp", params, function(data) {
+			var notices = JSON.parse(data.trim());
+			if (notices.length > 0) {
+				minNo = notices[notices.length - 1].no;
+			}
+			else{
+				alert("더이상 공지사항이 없습니다.");
+			}
+			noticeList = noticeList.concat(notices);
+			DataCache.set("mainCache", noticeList);
+			show(noticeList);
+			});
+		}
+		
+			function addFeed() {
+			window.location.href = "feedAdd.html";
+			}
+			function showFriends() {
+				window.location.href = "friend.html";
+				}
+			function showUserInfo() {
+				window.location.href = "userInfo.html";
+				}
+		function mix() {
+			window.location.href = "mix.html";
+			}
+		function closet() {
+			window.location.href = "closet.html";
+			};
+		function community() {
+			window.location.href = "main.html";
+			}
+		function setup() {
+			window.location.href = "setup.html";
+			}
+		function notice() {
+			window.location.href = "notice.html";
+			};
+		</script>

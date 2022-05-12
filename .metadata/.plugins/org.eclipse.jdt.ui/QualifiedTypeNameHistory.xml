@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="javax.sql.DataSource"/>
+    <fullyQualifiedTypeName name="com.sun.jdi.connect.spi.Connection"/>
+    <fullyQualifiedTypeName name="java.sql.SQLException"/>
+    <fullyQualifiedTypeName name="javax.naming.InitialContext"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="org.json.simple.JSONArray"/>
+    <fullyQualifiedTypeName name="org.apache.tomcat.util.json.JSONParser"/>
+    <fullyQualifiedTypeName name="org.json.simple.JSONObject"/>
+    <fullyQualifiedTypeName name="org.json.simple.parser.JSONParser"/>
+    <fullyQualifiedTypeName name="javax.naming.NamingException"/>
+    <fullyQualifiedTypeName name="org.json.simple.parser.ParseException"/>
+</qualifiedTypeNameHistroy>

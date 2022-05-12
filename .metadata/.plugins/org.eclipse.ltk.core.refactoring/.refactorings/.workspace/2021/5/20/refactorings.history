@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 4 resources" deleteContents="true" description="Delete 4 resources" element1="/commons-fileupload-1.4" element2="/commons-io-2.8.0" element3="/MySNS2" element4="/mysql-connector-java-8.0.24" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="4" stamp="1620997822709"/>
+</session>

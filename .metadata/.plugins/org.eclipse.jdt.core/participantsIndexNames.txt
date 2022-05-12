@@ -1,0 +1,25 @@
+INDEX VERSION 1.131
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\4211038644.index
+\MySNS2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2169483747.index
+\MySNS2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1406213844.index
+\Hello\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1556144244.index
+\MySNS2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2095055085.index
+\MySNS2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2169827941.index
+\ROOT\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2159122795.index
+\Hello2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\603666707.index
+\SHTwist\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1722995331.index
+\Hello2\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2381387155.index
+\SHTwist\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\391938064.index
+\MySNS\src\main\java
+C:\work\project\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\923361146.index
+\Hello2\src\main\java

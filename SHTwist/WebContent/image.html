@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div className="App">
+  <div>
+    <input type="file" onChange={this.onSelectFile} />
+  </div>
+  {src && (
+    <ReactCrop
+      src={src}
+      crop={crop}
+      onImageLoaded={this.onImageLoaded}
+      onComplete={this.onCropComplete}
+      onChange={this.onCropChange}
+    />
+  )}
+  {croppedImageUrl && (
+    <img alt="Crop" style={{ maxWidth: "100%" }} src={croppedImageUrl} />
+  )}
+</div>
+state = {
+  src: null,
+  crop: {
+    unit: "px"
+  }
+};
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/index.css">
+
+<title>커뮤니티</title>
+<style>
+.page-mnu {
+float: left;
+width: 100%;
+padding: 12px 10px;
+box-sizing: border-box;
+background-color: #f9f9f9;
+border-bottom: 1px solid #eee;
+}
+.page-mnu .menu {
+float: left;
+padding: 0px 10px;
+font-size: 0.95em;
+}
+feed {
+float: left;
+width: 100%;
+padding: 10px 0px;
+border-top: 1px solid #f4f4f4;
+}
+.feed .author {
+float: left;
+width: 100%;
+padding: 10px 16px;
+box-sizing: border-box;
+}
+.feed .author .photo {
+float: left;
+padding: 5px;
+width: 30px; height: 30px;
+border: 1px solid #ddd;
+border-radius: 30px;
+background-image: url("../images/contact.jpeg");
+background-image: url("../images/contact.jpeg");
+background-size: cover;
+background-position: 50%;
+background-repeat: no-repeat;
+overflow: hidden;
+}
+.feed .author .name {
+float: left;
+margin-left: 10px;
+line-height: 42px;
+font-weight: bold;
+}
+.feed .image {
+float: left;
+width: 100%;
+padding-top: 56.25%;
+background-size: contain;
+background-position: 50%;
+background-repeat: no-repeat;
+overflow: hidden;
+}
+.feed .text {
+float: left;
+width: 100%;
+margin: 20px 0px;
+padding: 0px 16px;
+box-sizing: border-box;
+/* multi-line text ellipsis */
+overflow: hidden;
+text-overflow: ellipsis;
+word-wrap: break-word;
+display: -webkit-box;
+-webkit-line-clamp: 4;
+-webkit-box-orient: vertical;
+}
+
+</style>
+</head>
+<body>
+<div class="page-hdr">MySNS</div>
+<div class="page-body">
+<div id="content" class="section"></div>
+</div>
+<div id="form-commentInfo">
+<div id="comment-count">댓글 <span id="count">0</span></div> 
+<input id="comment-input" placeholder="댓글을 입력해 주세요."> 
+<button id="submit">등록</button> </div> 
+<div id=comments> </div>
+</body>
+</html>
+<script src="js/index.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+Page.init(start, "feedView.html");
+});
+	
+function start(uid, feed) {
+	console.log(feed);
+	$("#content").append(getFeedCode(feed));
+	
+}
+
+	function getFeedCode(feed){
+		var name = (feed.user == null) ? feed.id : feed.user.name;
+		var str = "<div class = 'feed'>"
+		str += "<div class='author'>";
+		if (feed.user == null || feed.user.images == null) {
+		      str += "<div class='photo'></div>";
+		   }
+		   else {
+		      var imgurl = "images/" + feed.user.images[0];
+		      str += "<div class='photo' style='background-image: url(\"" + imgurl + "\")'></div>";
+		   }
+		str += "<div class='name'>" + name + "</div>";
+		str += "</div>";
+		str += "<div class = 'text'>" + feed.content + "</div>";
+		if (feed.images != null) {
+		var imgurl = "images/" + feed.images[0];
+		str += "<div class='image' style='background-image: url(\"" + imgurl + "\")'></div>";
+	}
+		str += "</div>";
+		return str;
+}
+	function show(feeds) {
+		if(feeds.length > 0){
+			minNo = feeds[feeds.length -1].no;
+			}
+	var str = "";
+	for(var i=0; i<feeds.length; i++){
+		str += getFeedCode(feeds[i]);
+	}
+	$("#list").append(str);
+}
+</script>

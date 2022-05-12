@@ -1,0 +1,216 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>상하의 트위스트</title>
+<style>
+.desc {
+    float: left;
+    width: 100%;
+    color: #888;
+    font-size: 0.9em;
+}
+.pad-4 { padding: 0 4px; }
+.pad-8 { padding: 0 8px; }
+canvas { border: solid 1px black; display: block;  height : 300px; width : 300px; }
+</style>
+</head>
+<body>
+	<div class="page-hdr">의상 조합</div>
+		<div class="crop">
+	<div class="a">
+	가로크기 <input type = text id = "width" value = 400 style = "width : 50px"> 
+	세로크기 <input type = text id = "height" value = 400 style = "width : 50px"> 
+	<input type = submit value = 확인 onclick='load()'>
+	</div>
+<br>
+   <input type='file' id='image_file' align = center>
+   <input type='button' value='Load' onclick='LoadImage();' />
+   <canvas id="canvas"></canvas>
+
+   <input type='button' value='편집하기' onclick='CropImage();' />
+   <canvas id="canvas_crop"></canvas>  
+   		<input type='button' id='cap' value='캡쳐하기' onclick='cap();' />	
+<br><br>
+</div>
+<div id="img"></div>
+
+<div class="page-footer">
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+   </div>
+   </body>
+
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="http://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="js/core.js"></script>
+<script type="text/javascript">
+var clsImage;
+var iCropLeft, iCropTop, iCropWidth, iCropHeight, width, height;
+//크기값 받기
+function load(){
+ width = $("#width").val();
+ height = $("#height").val();
+ console.log(width, height);
+		}
+// 로컬 이미지 파일을 Canvas 에 로드한다.
+function LoadImage()
+{
+   if( typeof window.FileReader !== 'function' )
+   {
+      alert("FileReader is not supported");
+      return;
+   }
+
+   var inputFile = document.getElementById('image_file');
+   var clsFileReader = new FileReader();
+   clsFileReader.onload = function(){
+      clsImage = new Image();
+      clsImage.onload = function(){
+         var canvas = document.getElementById("canvas");
+         canvas.width = clsImage.width;
+         canvas.height = clsImage.height;
+		if(width == null && height == null){
+         iCropLeft = 200;
+         iCropTop = 200;
+         iCropWidth = clsImage.width - 400;
+         iCropHeight = clsImage.height - 400;
+         iImageWidth = clsImage.width;
+         iImageHeight = clsImage.height;
+      }
+      else{
+      	iCropLeft = 200;
+          iCropTop = 200;
+          iCropWidth = clsImage.width - width;
+          iCropHeight = clsImage.height - height;
+          iImageWidth = clsImage.width;
+          iImageHeight = clsImage.height;
+      }
+         DrawCropRect();
+         AddCropMoveEvent();
+      };
+
+      clsImage.src = clsFileReader.result;
+   };
+
+   clsFileReader.readAsDataURL(inputFile.files[0]);
+}
+
+
+// 로컬 이미지 파일과 Crop 을 위한 사각형 박스를 그려준다.
+
+
+function DrawCropRect()
+{
+   var canvas = document.getElementById("canvas");
+   var ctx = canvas.getContext("2d");
+   ctx.drawImage( clsImage, 0, 0 );
+
+   ctx.strokeStyle = "#ff0000";
+   ctx.beginPath();
+   ctx.rect( iCropLeft, iCropTop, iCropWidth, iCropHeight );
+   ctx.stroke();
+} 
+
+// 이미지를 crop 하여서 하단 Canvas 에 그려준다.
+ function CropImage()
+{
+   var canvas = document.getElementById("canvas");
+
+   img = new Image();
+   img.onload = function(){
+      var canvas = document.getElementById("canvas_crop");
+      canvas.width = iCropWidth;
+      canvas.height = iCropHeight;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage( img, iCropLeft, iCropTop, iCropWidth, iCropHeight, 0, 0, iCropWidth, iCropHeight );
+   };
+
+   img.src = canvas.toDataURL("image/jpeg", 'image/octet-stream');
+   imgBase64 = img.src;
+   return imgBase64;
+   }
+
+// 마우스 이동에 따른 Crop 사각 박스을 이동하기 위한 이벤트 핸들러를 등록한다.
+function AddCropMoveEvent()
+{
+   var canvas = document.getElementById("canvas");
+   var bDrag = false;
+   var iOldX, iOldY;
+   var iCropLeftOld, iCropTopOld;
+
+   canvas.onmousedown = function(e){
+      bDrag = true;
+      iOldX = e.clientX;
+      iOldY = e.clientY;
+      iCropLeftOld = iCropLeft;
+      iCropTopOld = iCropTop;
+   };
+
+   canvas.onmousemove = function(e){
+      if( bDrag == false ) return;
+
+      var iX = e.clientX - iOldX;
+      var iY = e.clientY - iOldY;
+
+      iCropLeft = iCropLeftOld + iX;
+       if( iCropLeft < 0 )
+      {
+         iCropLeft = 0;
+      }
+      else if( iCropLeft + iCropWidth > clsImage.width )
+      {
+         iCropLeft = clsImage.width - iCropWidth;
+      }
+
+      iCropTop = iCropTopOld + iY;
+      if( iCropTop < 0 )
+      {
+         iCropTop = 0;
+      }
+      else if( iCropTop + iCropHeight > clsImage.height )
+      {
+         iCropTop = clsImage.height - iCropHeight;
+      }
+
+      DrawCropRect();
+   };
+
+   canvas.onmouseup = function(e){
+      bDrag = false;
+   };
+}	
+
+		function cap(){
+		var capture;
+			html2canvas($('#canvas_crop').get(0)).then(function(canvas){
+				var capimg = document.getElementById('img').appendChild(canvas)
+				imgBase64 = capimg.toDataURL("image/jpeg");
+				const a = document.createElement("a");
+				a.href = imgBase64;
+				a.download = "canvas-image.jpg";
+				a.click()			
+			});
+	}
+		
+		
+	function mix() {
+		window.location.href = "mix.html";
+		}
+	function closet() {
+		window.location.href = "closet.html";
+		};
+	function community() {
+		window.location.href = "main.html";
+		}
+	function setup() {
+		window.location.href = "setup.html";
+		}
+</script>

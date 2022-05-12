@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<title>MySNS</title>
+<style>
+.pad-4 { padding: 0 4px; }
+textarea {
+	float: left;
+	width: 100%;
+	height: 160px;
+	padding: 16px;
+	box-sizing: border-box;
+	font-size: 1.0em;
+	font-family: 'Malgun Gothic', 'Arial'; 
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	outline: none;
+}
+input[type=file] {
+	padding: 0px;
+	border: none;
+	outline: none;
+	font-size: 0.95em;
+}
+.desc {
+	float: left;
+	width: 100%;
+	margin-bottom: 5px;
+	font-size: 0.95em;
+	color: #888;
+}
+.category{float : left;}
+</style>
+</head>
+<body>
+<div class="page-hdr">상의 추가하기</div>
+<div class="page-body">
+<div class="section pad-4 mtop-30">
+<div class="desc">아래에서 추가할 옷 사진을 선택해주세요.</div>
+<input type="file" id="image" multiple>
+</div>
+</div>
+
+<div class="page-body">
+<input type="submit" class="mtop-30" value="업로드하기" onclick="upload()">
+</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>	
+<script>
+$(document).ready(function(){
+	Page.init(setup);
+});
+
+var loginId = null;
+function setup(uid){
+	loginId = uid;
+	console.log(loginId);
+}
+
+
+function upload() {
+id = loginId;
+console.log(id);
+
+
+var imgobj = $("#image")[0].files[0];
+var jsonobj = {id : id, ts : getTime()};
+if(imgobj != null){
+	jsonobj.images = [imgobj.name];
+}
+
+var params = new FormData(); // multipart/form-data를 전송하기 위해 웹 표준에서 제공하는 객체
+params.append("jsonstr", JSON.stringify(jsonobj));
+if (imgobj != null) {
+params.append("image", imgobj);
+}
+
+var url = "jsp/closetAdd.jsp";
+AJAX.call(url, params, function(data) {
+var code = data.trim();
+if (code == "ER") {
+alert("옷 추가 중 오류가 발생하였습니다.");
+}
+else {
+alert("옷 추가가 완료되었습니다.");
+DataCache.remove("mainCache");
+window.location.href = "closet.html";
+}
+}, true);
+}
+
+function getTime() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	var hour = ("0" + date.getHours()).slice(-2);
+	var min = ("0" + date.getMinutes()).slice(-2);
+	var sec = ("0" + date.getSeconds()).slice(-2);
+	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+	}
+</script>

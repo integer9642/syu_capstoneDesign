@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<title>MySNS</title>
+<style>
+.pad-4 { padding: 0 4px; }
+textarea {
+	float: left;
+	width: 100%;
+	height: 160px;
+	padding: 16px;
+	box-sizing: border-box;
+	font-size: 1.0em;
+	font-family: 'Malgun Gothic', 'Arial'; 
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	outline: none;
+}
+input[type=file] {
+	padding: 0px;
+	border: none;
+	outline: none;
+	font-size: 0.95em;
+}
+.desc {
+	float: left;
+	width: 100%;
+	margin-bottom: 5px;
+	font-size: 0.95em;
+	color: #888;
+}
+</style>
+</head>
+<body>
+<div class="page-hdr">글삭제하기</div>
+<div class="page-body">
+<div class="section pad-24 mtop-30">
+<input id="fno" type="text" placeholder="삭제할 게시글 번호">
+
+<input type="submit" class="mtop-30" value="글삭제하기" onclick="del()">
+
+</div>
+</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+  $(document).ready(function () {
+    Page.init(setup);
+  });
+
+  var loginId = null;
+  function setup(uid) {
+    loginId = uid;
+    console.log(loginId);
+  }
+  
+  function del(){
+	    var fno = $("#fno").val();
+		if (fno == ""){
+			alert("삭제할 게시글 번호를 입력해주세요.");
+			$("#fno").focus();
+			return;
+		}
+		var params ={fno : fno};
+		AJAX.call("jsp/feedDelete.jsp", params, function(data) {
+		      var code = data.trim();
+		      if (code == "ER") {
+		         alert("게시글 삭제 중 오류가 발생했습니다.");
+		      }
+		      else {
+		         alert("게시글 삭제가 완료되었습니다.");
+		         window.location.href = "main.html";
+		      }
+		   });
+		}
+
+</script>

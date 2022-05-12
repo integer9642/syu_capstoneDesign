@@ -1,0 +1,88 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<title>상하의 트위스트</title>
+<style>
+.desc {
+    float: left;
+    width: 100%;
+    color: #888;
+    font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+	   <div class="page-hdr">상하의 트위스트</div>
+	    	<div class="page-body">
+	        <div class="section pad-24 mtop-30">
+			<input type="text" id="id" placeholder="아이디(이메일주소)" required>
+			<input type="password" id="ps" class="mtop-10" placeholder="패스워드" required>
+			<input type="password" id="ps2" class="mtop-10"  placeholder="패스워드(확인)" required>
+			<input type="text" id="name" class="mtop-10" placeholder="이름" required>
+			<input type="submit" class="mtop-20" value="회원가입하기" onclick="signup()">
+		</div>
+		<div class="section pad-24 mtop-30">
+            <div class="desc mtop-20 mbot-20">
+                회원 가입시 상하의 트위스트 약관에 동의하신 것으로 간주합니다.
+            </div>
+		<a href=""><div class="button">약관보기</div></a>
+        </div>
+        </div>
+	    <div class="page-footer"></div>	
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function signup() {
+	var id = $("#id").val().trim();
+	if (id == "") {
+	alert("아이디를 입력해 주세요.");
+	$("#id").focus();
+	return;
+	}
+	var ps = $("#ps").val().trim();
+	if (ps == "") {
+	alert("패스워드를 입력해 주세요.");
+	$("#ps").focus();
+	return;
+	}
+	var ps2 = $("#ps2").val().trim();
+	if (ps != ps2) {
+	alert("입력된 두 개의 패스워드가 일치하지 않습니다.");
+	$("#ps2").focus();
+	return;
+	}
+	var name = $("#name").val().trim();
+	if (name == "") {
+	alert("이름을 입력해 주세요.");
+	$("#name").focus();
+	return;
+	}
+	var usrobj = {id: id, password: ps, name: name, ts: getToday()};
+	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
+	var url ="jsp/signup.jsp";
+	AJAX.call(url, params, function(data) {
+	var code = data.trim();
+	if(code == "EX") {
+	alert("이미 가입한 회원입니다.");
+	}
+	else if(code == "ER") {
+	alert("회원가입 처리중 에러가 발생하였습니다.");
+	}
+	else {
+	alert("회원 가입이 완료되었습니다.");
+	window.location.href = "main.html";
+	}
+	});
+	}
+	function getToday() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	return year + "-" + month + "-" + day;
+	}
+</script>

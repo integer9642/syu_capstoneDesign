@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+
+<title>상하의 트위스트</title>
+<style>
+
+</style>
+</head>
+<body>
+	<div class="page-hdr">나의 옷장 - 상의</div>	
+		<div class="page-body">
+<div class="page-mnu">
+		<div class="menu" onclick="closet()">상의</div>
+		<div class="menu" onclick="bottom()">하의</div>
+		<div class="menu" onclick="cody()">코디</div>
+		<div class="menu" onclick="add()">상의 추가하기</div>
+		</div>
+ 			
+
+<div id="list" class="section"></div>
+<div class="section mtop-10 mbot-30 pad-16">
+<div class="button" onclick="getNext()">옷 더보기 </div>
+</div>
+	<div class="page-footer">
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+	});
+
+	var minNo = -1;
+	var topList = [];	
+	var frIds = null;
+	function start(uid){
+		frIds = '"' + uid + '"';
+		AJAX.call("jsp/friendList.jsp", {id: uid}, function(data) {
+		var list = JSON.parse(data.trim());
+		for (var i=0; i<list.length; i++) {
+		frIds += ', "' + list[i].id + '"';
+		}
+		start2(uid);
+		});
+	}
+
+	function start2(uid) {
+		var tops = DataCache.get("mainCache");
+		if (tops != null){
+			console.log("[start] fetch the existing top list from the cache... ");
+			topList = tops;
+			show(topList);
+		}
+		else{
+			AJAX.call("jsp/imgGetGroup.jsp", {frids : frIds}, function(data) {
+				var tops = JSON.parse(data.trim());
+				console.log("[start] fetch a new top list from the server ...");
+				topList = tops;
+				DataCache.set("mainCache", topList);
+				show(topList);
+			});
+		}
+	}
+		
+		function show(tops) {
+			if(tops.length > 0){
+				minNo = tops[tops.length -1].no;
+				}
+		var str = "";
+		for(var i=0; i<tops.length; i++){
+			str += gettopCode(tops[i]);
+		}
+		$("#list").append(str);
+	}
+		function gettopCode(top){
+			var name = (top.user == null) ? top.no : top.user.name;
+			var str = "<div class='feed' onclick='showFeed(" + top.no + ")'>";
+			str += "<div class = 'feed.no'>" + "no." + top.no +  "</div>";
+			str += "<div class='author'>";
+			if (top.user == null || top.user.images == null){
+			str += "<div class='photo'></div>";
+			}
+			else{
+				var imgurl = "images/" + top.user.images[0];
+				str += "<div class='photo' style='background-image: url(\"" + imgurl + "\")'></div>";
+			}
+			str += "<div class='name'>" + name + "</div>";
+			str += "</div>";
+			if (top.images != null) {
+			var imgurl = "images/" + top.images[0];
+			str += "<div class='image' style='background-image: url(\"" + imgurl + "\")'></div>";
+		}
+			str += "</div>";
+			return str;
+	}
+		function showtop(fno){
+			for (var i=0; i<topList.length; i++){
+				if(topList[i].no == fno){
+					console.log(fno);
+					Page.go("topView.html", topList[i]);
+					return;
+				}
+			}
+		}
+		
+		function getNext() {
+			var params = {frids: frIds, maxNo: minNo};
+			AJAX.call("jsp/imgGetGroup.jsp", params, function(data) {
+			var tops = JSON.parse(data.trim());
+			if (tops.length > 0) {
+				minNo = tops[tops.length - 1].no;
+			}
+			else{
+				alert("더이상 작성글이 없습니다.");
+			}
+			topList = topList.concat(tops);
+			DataCache.set("mainCache", topList);
+			show(topList);
+			});
+		}
+
+function mix() {
+	window.location.href = "mix.html";
+	}
+function closet() {
+	window.location.href = "closet.html";
+	};
+function community() {
+	window.location.href = "main.html";
+	}
+function setup() {
+	window.location.href = "setup.html";
+	}
+	function masterPage() {
+		window.location.href = "masterPage.html";
+		}
+
+	function bottom() {
+		window.location.href = "bottom.html";
+		}
+	function cody() {
+		window.location.href = "cody.html";
+		}
+	function add(){
+		window.location.href = "closetAdd.html";
+
+	}
+</script>

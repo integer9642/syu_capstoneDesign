@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+
+<title>상하의 트위스트</title>
+<style>
+.desc {
+    float: left;
+    width: 100%;
+    color: #888;
+    font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+	<div class="page-hdr">커뮤니티</div>
+		<div class="page-body">
+		<div class="section pad-24 mtop-30">
+
+<form action="community.jsp" method="post" enctype="multipart/form-data">
+ <table align=center>
+   <tr><td colspan=2 align=center height=40><b>글작성</b><td></tr>
+   <tr>
+      <td align=right>제목&nbsp;</td>
+      <td><input type="text" name="title" placeholder="제목을 입력하세요." required ></td>
+   </tr>
+   <tr>
+      <td align=right>이미지첨부&nbsp;</td>
+      <td><input type="file" name="image"></td>
+   </tr>
+   <tr>
+      <td align=right>내용&nbsp;</td>
+      <td><textarea name="content" placeholder="내용을 입력하세요." required rows=5 cols=20></textarea></td>
+   </tr>
+   <tr>
+      <td colspan=2 align=center height=50>
+      <input type="submit" value="업로드하기">
+      <br><br>
+      <input type="reset" value="글쓰기 취소">
+   </td>
+   </tr>
+<div class="page-footer">
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+        
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function mix() {
+		window.location.href = "mix.html";
+		}
+	function closet() {
+		window.location.href = "closet.html";
+		};
+	function community() {
+		window.location.href = "community.html";
+		}
+	function setup() {
+		window.location.href = "setup.html";
+		}
+</script>

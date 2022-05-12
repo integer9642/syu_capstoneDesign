@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<title>상하의 트위스트</title>
+<style>
+.desc {
+    float: left;
+    width: 100%;
+    color: 	#888;
+    font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+	<div class="page-hdr">상하의 트위스트</div>
+		<div class="page-body">
+		<div class="section pad-24 mtop-30">
+		<input id="id" type="text" placeholder="아이디 (이메일주소)">
+		<input id="ps" type="password" class="mtop-10" placeholder="패스워드">
+		<input type="submit" class="mtop-20" value="로그인하기" onclick="login()">
+	</div>
+<div class="section pad-24 mtop-30">
+<div class="desc mtop-20 mbot-20">
+아이디가 없으세요? 
+간단한 가입 절차를 통해 상하의 트위스트에 가입하세요.
+</div>
+<a href="signup.html"><div class="button">회원 가입하기</div></a>
+</div>
+</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function login() {
+	var id = $("#id").val().trim();
+	if (id == "") {
+	alert("아이디를 입력해 주세요.");
+	$("#id").focus();
+	return;
+	}
+	var ps = $("#ps").val().trim();
+	if (ps == "") {
+	alert("패스워드를 입력해 주세요.");
+	$("#ps").focus();
+	return;
+	}
+	var url ="jsp/login.jsp?id=" + id + "&ps=" + ps;
+	AJAX.call(url, null, function(data) {
+	var code = data.trim();
+	if(code == "NE") {
+	alert("아이디가 존재하지 않습니다.");
+	}
+	else if(code == "PE") {
+	alert("패스워드가 일치하지 않습니다.");
+	}
+	else {
+	window.location.href = "mix.html";
+	}
+	});
+}
+</script>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<style>
+.pad-4{ padding:0 4px;}
+.pad-8 { padding: 0 8px; }
+textarea {
+   float: left;
+   width: 100%;
+   height: 160px;
+   padding: 16px;
+   box-sizing: border-box;
+   font-size: 1.0em;
+   font-family: 'Malgun Gothic', 'Arial';
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   outline: none;
+}
+input[type=file] {
+   padding: 0px;
+   border: none;
+   outline: none;
+   font-size: 0.95em;
+}
+.desc {
+   float: left;
+   width: 100%;
+   margin-bottom: 5px;
+   font-size: 0.95em;
+   color: #888;
+}
+</style>
+<meta charset="UTF-8">
+<title>table Tag</title>
+</head>
+<body>
+   <div class="page-hdr">내정보</div>
+   <div class="page-body">
+      <div class="page-mnu">
+         <div class="menu" onclick="goHome()">홈</div>
+         <div class="menu" onclick="logout()">로그아웃</div>
+         <div class="menu" onclick="withdraw()">회원탈퇴</div>
+      </div>
+      <div class="section pad-24 mtop-30">
+         <div class="section pad-8 mbot-20">
+            아이디: <span id="id"></span>
+         </div>
+         <input id="name" type="text" class="mbot-10" placeholder="이름">         
+         <br>
+         <textarea id="desc" placeholder="간단한소개글을작성해주세요."></textarea>
+         <div class="section pad-4 mtop-30">
+            <div class="desc mbot-10">아래에서이미지를 선택해주세요.</div>
+            <input type="file" id="image">
+         </div>
+         <input type="submit" class="mtop-30" value="수정하기" onclick="confirm()">
+         
+      </div>
+   </div>
+   <div class="page-footer">Copyright: mysns.com, 202x</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function(){
+   Page.init(start);
+});
+
+var userObj = null;
+function start(uid) {
+   var params = {id: uid};
+   AJAX.call("jsp/userGet.jsp", params, function(data) {
+      userObj = JSON.parse(data.trim());
+      setPage(userObj);
+   });
+}
+
+function setPage(uobj) {
+   if (uobj == null) return;
+   $("#id").html(uobj.id);
+   $("#name").val(uobj.name);
+   $("#desc").val(uobj.desc);
+}
+
+
+function update() {
+
+   var name = $("#name").val().trim();
+   if (name == "") {
+      alert("이름을 입력해 주세요.");
+      $("#name").focus();
+      return;   
+   }
+   
+   var desc = $("#desc").val().trim();
+   var imgobj = $("#image")[0].files[0];
+   
+   var jsonobj = userObj;
+   if (name != "") jsonobj.name = name;
+   if (desc != "") jsonobj.desc = desc;
+   if (imgobj != null) {
+      jsonobj.images = [imgobj.name];
+   }
+   jsonobj.ts = getTime();
+   
+   var params = new FormData();
+   params.append("id", jsonobj.id);
+   params.append("jsonstr", JSON.stringify(jsonobj));
+   if (imgobj != null) {
+      params.append("image", imgobj);
+   }
+   
+   var url = "jsp/userUpdate.jsp";
+   AJAX.call(url, params, function(data) {
+      var code = data.trim();
+      if (code == "ER") {
+         alert("업데이트 중 오류가 발생하였습니다.");
+      }
+      else {
+         alert("사용자 정보 업데이트가 완료되었습니다.");
+         window.location.href="userInfo.html";
+      }
+   }, true);
+}
+
+function getTime() {
+   var date = new Date();
+   var year = date.getFullYear();
+   var month = ("0" + (1 + date.getMonth())).slice(-2);
+   var day = ("0" + date.getDate()).slice(-2);
+   var hour = ("0" + date.getHours()).slice(-2);
+   var min = ("0" + date.getMinutes()).slice(-2);
+   var sec = ("0" + date.getSeconds()).slice(-2);
+   return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+}
+
+function goHome() {
+   window.location.href = "main.html";
+}
+
+function logout() {
+   AJAX.call("jsp/logout.jsp", null, function(data) {
+   alert("로그아웃을 완료하였습니다.");
+   DataCache.remove("mainCache");
+   window.location.href = "login.html";
+   });
+}
+
+function withdraw() {
+   window.location.href = "withdraw.html";
+}
+
+</script>

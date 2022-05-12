@@ -1,0 +1,9 @@
+<%@ page contentType="text/html" pageEncoding="utf-8" %>
+<%@ page import="dao.*" %>
+<%
+	String fno = request.getParameter("fno");
+	out.print((new UserDAO()).pass(request.getParameter("ps")));
+
+	System.out.println(ps);
+
+%>

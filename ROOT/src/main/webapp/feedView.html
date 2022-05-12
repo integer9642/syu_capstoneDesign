@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/index.css">
+
+<title>MySNS</title>
+<style>
+
+</style>
+</head>
+<body>
+<div class="page-hdr">MySNS</div>
+<div class="page-body">
+<div id="content" class="section"></div>
+</div>
+<div id="form-commentInfo">
+<div id="comment-count">댓글 <span id="count">0</span></div> 
+<input id="comment-input" placeholder="댓글을 입력해 주세요."> 
+<button id="submit">등록</button> </div> 
+<div id=comments> </div>
+</body>
+</html>
+<script src="js/index.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+Page.init(start, "feedView.html");
+});
+	
+function start(uid, feed) {
+	console.log(feed);
+	$("#content").append(getFeedCode(feed));
+	
+}
+
+	function getFeedCode(feed){
+		var name = (feed.user == null) ? feed.id : feed.user.name;
+		var str = "<div class = 'feed'>"
+		str += "<div class='author'>";
+		if (feed.user == null || feed.user.images == null) {
+		      str += "<div class='photo'></div>";
+		   }
+		   else {
+		      var imgurl = "images/" + feed.user.images[0];
+		      str += "<div class='photo' style='background-image: url(\"" + imgurl + "\")'></div>";
+		   }
+		str += "<div class='name'>" + name + "</div>";
+		str += "</div>";
+		str += "<div class = 'text'>" + feed.content + "</div>";
+		if (feed.images != null) {
+		var imgurl = "images/" + feed.images[0];
+		str += "<div class='image' style='background-image: url(\"" + imgurl + "\")'></div>";
+	}
+		str += "</div>";
+		return str;
+}
+	function show(feeds) {
+		if(feeds.length > 0){
+			minNo = feeds[feeds.length -1].no;
+			}
+	var str = "";
+	for(var i=0; i<feeds.length; i++){
+		str += getFeedCode(feeds[i]);
+	}
+	$("#list").append(str);
+}
+</script>

@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+
+<title>상하의 트위스트</title>
+<style>
+
+</style>
+</head>
+<body>
+	<div class="page-hdr">나의 옷장 - 하의</div>	
+		<div class="page-body">
+<div class="page-mnu">
+		<div class="menu" onclick="closet()">상의</div>
+		<div class="menu" onclick="bottom()">하의</div>
+		<div class="menu" onclick="cody()">코디</div>
+		<div class="menu" onclick="add()">하의 추가하기</div>
+		</div>
+ 			
+
+<div id="list" class="section"></div>
+<div class="section mtop-10 mbot-30 pad-16">
+<div class="button" onclick="getNext()">옷 더보기 </div>
+</div>
+	<div class="page-footer">
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+	});
+
+	var minNo = -1;
+	var bottomList = [];	
+	var frIds = null;
+	function start(uid){
+		frIds = '"' + uid + '"';
+		AJAX.call("jsp/friendList.jsp", {id: uid}, function(data) {
+		var list = JSON.parse(data.trim());
+		for (var i=0; i<list.length; i++) {
+		frIds += ', "' + list[i].id + '"';
+		}
+		start2(uid);
+		});
+	}
+
+	function start2(uid) {
+		var bottoms = DataCache.get("mainCache");
+		if (bottoms != null){
+			console.log("[start] fetch the existing bottom list from the cache... ");
+			bottomList = bottoms;
+			show(bottomList);
+		}
+		else{
+			AJAX.call("jsp/bottomGetGroup.jsp", {frids : frIds}, function(data) {
+				var bottoms = JSON.parse(data.trim());
+				console.log("[start] fetch a new bottom list from the server ...");
+				bottomList = bottoms;
+				DataCache.set("mainCache", bottomList);
+				show(bottomList);
+			});
+		}
+	}
+		
+		function show(bottoms) {
+			if(bottoms.length > 0){
+				minNo = bottoms[bottoms.length -1].no;
+				}
+		var str = "";
+		for(var i=0; i<bottoms.length; i++){
+			str += getbottomCode(bottoms[i]);
+		}
+		$("#list").append(str);
+	}
+		function getbottomCode(bottom){
+			var name = (bottom.user == null) ? bottom.no : bottom.user.name;
+			var str = "<div class='feed' onclick='showFeed(" + bottom.no + ")'>";
+			str += "<div class = 'feed.no'>" + "no." + bottom.no +  "</div>";
+			str += "<div class='author'>";
+			if (bottom.user == null || bottom.user.images == null){
+			str += "<div class='photo'></div>";
+			}
+			else{
+				var imgurl = "images/" + bottom.user.images[0];
+				str += "<div class='photo' style='background-image: url(\"" + imgurl + "\")'></div>";
+			}
+			str += "<div class='name'>" + name + "</div>";
+			str += "</div>";
+			if (bottom.images != null) {
+			var imgurl = "images/" + bottom.images[0];
+			str += "<div class='image' style='background-image: url(\"" + imgurl + "\")'></div>";
+		}
+			str += "</div>";
+			return str;
+	}
+		function showbottom(fno){
+			for (var i=0; i<bottomList.length; i++){
+				if(bottomList[i].no == fno){
+					console.log(fno);
+					Page.go("bottomView.html", bottomList[i]);
+					return;
+				}
+			}
+		}
+		
+		function getNext() {
+			var params = {frids: frIds, maxNo: minNo};
+			AJAX.call("jsp/bottomGetGroup.jsp", params, function(data) {
+			var bottoms = JSON.parse(data.trim());
+			if (bottoms.length > 0) {
+				minNo = bottoms[bottoms.length - 1].no;
+			}
+			else{
+				alert("더이상 작성글이 없습니다.");
+			}
+			bottomList = bottomList.concat(bottoms);
+			DataCache.set("mainCache", bottomList);
+			show(bottomList);
+			});
+		}
+
+function mix() {
+	window.location.href = "mix.html";
+	}
+function closet() {
+	window.location.href = "closet.html";
+	};
+function community() {
+	window.location.href = "main.html";
+	}
+function setup() {
+	window.location.href = "setup.html";
+	}
+	function masterPage() {
+		window.location.href = "masterPage.html";
+		}
+
+	function bottom() {
+		window.location.href = "bottom.html";
+		}
+	function cody() {
+		window.location.href = "cody.html";
+		}
+	function add(){
+		window.location.href = "closetAdd.html";
+
+	}
+</script>

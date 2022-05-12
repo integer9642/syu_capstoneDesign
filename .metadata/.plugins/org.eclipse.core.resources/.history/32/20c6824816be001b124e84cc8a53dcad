@@ -1,0 +1,43 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<title>MySNS</title>
+</head>
+<body>
+<div class="page-hdr">MySNS</div>
+<div class="page-body">
+<table id="list" class="section mtop-20 pad-16"></table>
+
+</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+Page.init(start);
+});
+function start(uid) {
+AJAX.call("jsp/userList.jsp", null, function(data) {
+	var users = JSON.parse(data.trim());
+	show(users);
+});
+}
+
+function show(users){
+	var str = "";
+	str += "<tr><th colspan=3>가입자 리스트</th><td>";
+	for(var i=0; i<users.length; i++){
+	str += "<tr><td colspan=3><hr></td><td>";
+	str += "<tr>";
+	str += "<td>" + users[i].id + "</td>";
+	str += "<td>" + users[i].name + "</td>";
+	str += "<td>&nbsp;<small>(" + users[i].ts + ")</small></td>";
+	str += "</tr>";
+}
+ 
+$("#list").html(str);
+}
+</script>

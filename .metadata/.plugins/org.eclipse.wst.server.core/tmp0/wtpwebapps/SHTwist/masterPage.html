@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<style>
+ .page-mnu {bottom:0;     position:absolute;}
+
+</style>
+<title>MySNS</title>
+</head>
+<body>
+<div class="page-hdr">관리자페이지</div>
+<div class="page-body">
+<table id="list" class="section mtop-20 pad-16"></table>
+	<div class="page-hdr">관리자 페이지</div>
+		<div class="page-body">
+		<div class="section pad-24 mtop-30">
+<div class="menu" onclick="noticeAdd()">커뮤니티 공지 글쓰기</div>
+<br><br>
+<div class="menu" onclick="feedDelete()">커뮤니티 글 수정 삭제하기</div>
+<br><br>
+<div class="menu" onclick="userList()">회원 관리하기</div>
+</div>
+		<div class="page-mnu">
+		<div class="menu" onclick="mix()">의상조합</div>
+		<div class="menu" onclick="closet()">나의옷장</div>
+		<div class="menu" onclick="community()">커뮤니티</div>
+		<div class="menu" onclick="setup()">설정</div>
+		</div>
+</body>
+</html>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+Page.init(start);
+});
+function start(uid) {
+AJAX.call("jsp/userList.jsp", null, function(data) {
+	var users = JSON.parse(data.trim());
+	show(users);
+});
+}
+function mix() {
+	window.location.href = "mix.html";
+	}
+function closet() {
+	window.location.href = "closet.html";
+	};
+function community() {
+	window.location.href = "main.html";
+	}
+function setup() {
+	window.location.href = "setup.html";
+	}
+function userList() {
+	window.location.href = "userList.html";
+	}
+function noticeAdd() {
+	window.location.href = "noticeAdd.html";
+	}
+function feedDelete() {
+	window.location.href = "feedDelete.html";
+	}
+</script>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<Resource name="jdbc/rjs402"
+	auth="Container"
+	type="javax.sql.DataSource"
+	driverClassName="com.mysql.jdbc.Driver"
+	url="jdbc:mysql://localhost:3306/rjs402?serverTimezone=UTC"
+	username="rjs402"
+	password="Frenzy42!!"
+	maxTotal="16"
+	maxIdle="4"
+	maxWaitMillis="-1" />
+</Context>
